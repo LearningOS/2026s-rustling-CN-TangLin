@@ -14,17 +14,16 @@ main:
         - name: Run tests
           script: cargo test --test cicv --verbose
 
-        - name: Extract score
-          script: jq -r '.statistics.total_succeeds' .ide/result/check_result.json
-          exports:
-            score: SCORE
-
         - name: Post score to OpenCamp
-          image: docker.cnb.cool/opencamp/learning-docker/send-score-to-opencamp:latest
-          settings:
-            COURSE_ID: $RUSTLINGS_COURSE_ID
-            SCORE: $SCORE
-            TOKEN: $RUSTLINGS_TOKEN
+          script: |
+            SCORE=$(jq -r '.statistics.total_succeeds' .ide/result/check_result.json)
+            echo "Score: $SCORE / 100"
+            curl -X POST "https://api.cnb.cool" \
+              -H 'accept: application/json;charset=utf-8' \
+              -H 'Content-Type: application/json' \
+              -H "token: $RUSTLINGS_TOKEN" \
+              -d "{\"channel\": \"cnb\", \"courseId\": $RUSTLINGS_COURSE_ID, \"ext\": \"{}\", \"name\": \"$CNB_BUILD_USER\", \"score\": $SCORE, \"totalScore\": 100}" \
+              --fail --show-error
 
 # 云开发环境: 点击"云原生开发"按钮时启动
 $:
