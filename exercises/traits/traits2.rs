@@ -1,20 +1,18 @@
-// traits2.rs
-//
-// Your task is to implement the trait `AppendBar` for a vector of strings. To
-// implement this trait, consider for a moment what it means to 'append "Bar"'
-// to a vector of strings.
-//
-// No boiler plate code this time, you can do this!
-//
-// Execute `rustlings hint traits2` or use the `hint` watch subcommand for a hint.
-
-// I AM NOT DONE
-
 trait AppendBar {
     fn append_bar(self) -> Self;
 }
 
-// TODO: Implement trait `AppendBar` for a vector of strings.
+// 为 Vec<String> 实现 AppendBar trait
+impl AppendBar for Vec<String> {
+    fn append_bar(self) -> Self {
+        // 先将 self 转为可变（因为要追加元素）
+        let mut vec = self;
+        // 向向量末尾追加 "Bar" 字符串
+        vec.push(String::from("Bar"));
+        // 返回修改后的向量
+        vec
+    }
+}
 
 #[cfg(test)]
 mod tests {

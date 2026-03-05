@@ -3,11 +3,13 @@
 // Execute `rustlings hint enums2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 #[derive(Debug)]
 enum Message {
-    // TODO: define the different variants used below
+    // 定义带不同数据类型的枚举变体，匹配 main 中的使用方式
+    Quit,                          // 无数据变体
+    Echo(String),                  // 携带 String 类型的变体
+    Move { x: i32, y: i32 },       // 携带匿名结构体的变体
+    ChangeColor(u8, u8, u8),       // 携带三个 u8 类型的元组变体
 }
 
 impl Message {

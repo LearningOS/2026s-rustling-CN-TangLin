@@ -1,27 +1,3 @@
-// quiz2.rs
-//
-// This is a quiz for the following sections:
-// - Strings
-// - Vecs
-// - Move semantics
-// - Modules
-// - Enums
-//
-// Let's build a little machine in the form of a function. As input, we're going
-// to give a list of strings and commands. These commands determine what action
-// is going to be applied to the string. It can either be:
-// - Uppercase the string
-// - Trim the string
-// - Append "bar" to the string a specified amount of times
-// The exact form of this will be:
-// - The input is going to be a Vector of a 2-length tuple,
-//   the first element is the string, the second one is the command.
-// - The output element is going to be a Vector of strings.
-//
-// No hints this time!
-
-// I AM NOT DONE
-
 pub enum Command {
     Uppercase,
     Trim,
@@ -31,12 +7,23 @@ pub enum Command {
 mod my_module {
     use super::Command;
 
-    // TODO: Complete the function signature!
-    pub fn transformer(input: ???) -> ??? {
-        // TODO: Complete the output declaration!
-        let mut output: ??? = vec![];
-        for (string, command) in input.iter() {
-            // TODO: Complete the function body. You can do it!
+    // 修复：移除引用，参数直接接收 Vec<(String, Command)>
+    pub fn transformer(input: Vec<(String, Command)>) -> Vec<String> {
+        // 补全输出类型：Vec<String>
+        let mut output: Vec<String> = vec![];
+        for (string, command) in input { // 直接迭代，无需 iter()
+            // 匹配命令并执行对应的字符串转换
+            let result = match command {
+                Command::Uppercase => string.to_uppercase(), // 转大写
+                Command::Trim => string.trim().to_string(),   // 去除首尾空格
+                Command::Append(n) => {
+                    // 拼接 n 次 "bar"
+                    let mut s = string; // 直接使用，无需克隆（已获取所有权）
+                    s.push_str(&"bar".repeat(n));
+                    s
+                }
+            };
+            output.push(result);
         }
         output
     }
@@ -44,8 +31,8 @@ mod my_module {
 
 #[cfg(test)]
 mod tests {
-    // TODO: What do we need to import to have `transformer` in scope?
-    use ???;
+    // 导入 my_module 中的 transformer 函数
+    use super::my_module::transformer;
     use super::Command;
 
     #[test]

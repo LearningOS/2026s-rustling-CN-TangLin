@@ -3,7 +3,6 @@
 // Execute `rustlings hint threads3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 use std::sync::mpsc;
 use std::sync::Arc;
@@ -31,18 +30,24 @@ fn send_tx(q: Queue, tx: mpsc::Sender<u32>) -> () {
     let qc1 = Arc::clone(&qc);
     let qc2 = Arc::clone(&qc);
 
+    // 关键修复1：克隆 Sender，避免多次移动
+    let tx1 = tx.clone();
+    let tx2 = tx.clone();
+
+    // 第一个线程使用克隆的 tx1
     thread::spawn(move || {
         for val in &qc1.first_half {
             println!("sending {:?}", val);
-            tx.send(*val).unwrap();
+            tx1.send(*val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
 
+    // 第二个线程使用克隆的 tx2
     thread::spawn(move || {
         for val in &qc2.second_half {
             println!("sending {:?}", val);
-            tx.send(*val).unwrap();
+            tx2.send(*val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
@@ -56,7 +61,8 @@ fn main() {
     send_tx(queue, tx);
 
     let mut total_received: u32 = 0;
-    for received in rx {
+    // 关键修复2：先转成迭代器（into_iter），再用 take 限制接收次数
+    for received in rx.into_iter().take(queue_length as usize) {
         println!("Got: {}", received);
         total_received += 1;
     }

@@ -5,9 +5,11 @@
 
 
 fn main() {
-    call_me();
+    call_me(5);
 }
 
-fn call_me() {
-
+fn call_me(num: i32) {
+    for _ in 0..num {
+        println!("Ring! Call me!");
+    }
 }

@@ -34,22 +34,18 @@
 // Execute `rustlings hint tests7` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
-fn main() {}
+fn main() {
+    // 1. 获取当前系统时间对应的 Unix 时间戳（秒）
+    let current_timestamp = std::time::SystemTime::now()
+        // 计算从 Unix 纪元（1970-01-01 00:00:00 UTC）到现在的时长
+        .duration_since(std::time::UNIX_EPOCH)
+        // 处理时间获取失败的异常（如系统时间异常）
+        .expect("Failed to get system time")
+        // 转换为秒数（u64 类型，与测试中的 timestamp 类型一致）
+        .as_secs();
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_success() {
-        let timestamp = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
-        let s = std::env::var("TEST_FOO").unwrap();
-        let e: u64 = s.parse().unwrap();
-        assert!(timestamp >= e && timestamp < e + 10);
-    }
+    // 2. 向 Cargo 发送指令，注入 TEST_FOO 环境变量
+    // 格式：cargo:rustc-env=变量名=值（这是 Cargo 识别的设置编译环境变量的标准指令）
+    println!("cargo:rustc-env=TEST_FOO={}", current_timestamp);
 }

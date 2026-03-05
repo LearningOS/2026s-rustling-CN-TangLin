@@ -10,7 +10,7 @@
 fn slice_out_of_array() {
     let a = [1, 2, 3, 4, 5];
 
-    let nice_slice = &a[1..4];
+    let nice_slice = &a[1..4]; // 截取索引 1（包含）到 4（不包含）的元素
 
     assert_eq!([2, 3, 4], nice_slice)
 }

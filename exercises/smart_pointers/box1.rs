@@ -18,11 +18,11 @@
 //
 // Execute `rustlings hint box1` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+
 
 #[derive(PartialEq, Debug)]
 pub enum List {
-    Cons(i32, List),
+    Cons(i32, Box<List>), // Step 1: 用Box包裹递归的List，解决大小计算问题
     Nil,
 }
 
@@ -35,11 +35,12 @@ fn main() {
 }
 
 pub fn create_empty_list() -> List {
-    todo!()
+    List::Nil // Step 2: 空列表直接返回Nil
 }
 
 pub fn create_non_empty_list() -> List {
-    todo!()
+    // 非空列表：Cons(当前值, Box::new(下一个节点))，最后以Nil结尾
+    List::Cons(1, Box::new(List::Cons(2, Box::new(List::Nil))))
 }
 
 #[cfg(test)]
