@@ -1,11 +1,4 @@
 // macros3.rs
-//
-// Make me compile, without taking the macro out of the module!
-//
-// Execute `rustlings hint macros3` or use the `hint` watch subcommand for a
-// hint.
-
-
 mod macros {
     #[macro_export]
     macro_rules! my_macro {
@@ -15,8 +8,9 @@ mod macros {
     }
 }
 
-use macros::my_macro;
+// 关键：删除手动导入宏的语句，因为 #[macro_export] 已让宏全局可用
+// use crate::my_macro;  // 这一行要删掉
 
 fn main() {
-    my_macro!();
+    my_macro!();  // 直接使用即可，无需导入
 }
