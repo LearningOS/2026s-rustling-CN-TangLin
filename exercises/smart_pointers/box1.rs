@@ -18,8 +18,6 @@
 //
 // Execute `rustlings hint box1` or use the `hint` watch subcommand for a hint.
 
-
-
 #[derive(PartialEq, Debug)]
 pub enum List {
     Cons(i32, Box<List>), // Step 1: 用Box包裹递归的List，解决大小计算问题

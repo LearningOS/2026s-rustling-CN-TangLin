@@ -14,8 +14,8 @@ struct OtherSoftware {
 }
 
 // 无需修改这两行，因为 trait 已有默认实现
-impl Licensed for SomeSoftware {} 
-impl Licensed for OtherSoftware {} 
+impl Licensed for SomeSoftware {}
+impl Licensed for OtherSoftware {}
 
 #[cfg(test)]
 mod tests {

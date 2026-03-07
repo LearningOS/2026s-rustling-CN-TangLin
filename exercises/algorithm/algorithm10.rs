@@ -1,6 +1,6 @@
 /*
-	graph
-	This problem requires you to implement a basic graph functio
+    graph
+    This problem requires you to implement a basic graph functio
 */
 
 use std::collections::{HashMap, HashSet};
@@ -49,7 +49,8 @@ pub trait Graph {
         if self.contains(node) {
             return false;
         }
-        self.adjacency_table_mutable().insert(node.to_string(), Vec::new());
+        self.adjacency_table_mutable()
+            .insert(node.to_string(), Vec::new());
         true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {

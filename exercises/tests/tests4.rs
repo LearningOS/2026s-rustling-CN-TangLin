@@ -7,7 +7,7 @@
 
 struct Rectangle {
     width: i32,
-    height: i32
+    height: i32,
 }
 
 impl Rectangle {
@@ -16,7 +16,7 @@ impl Rectangle {
         if width <= 0 || height <= 0 {
             panic!("Rectangle width and height cannot be negative!")
         }
-        Rectangle {width, height}
+        Rectangle { width, height }
     }
 }
 

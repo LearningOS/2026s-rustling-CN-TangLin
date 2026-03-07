@@ -1,5 +1,5 @@
 // clippy3.rs
-// 
+//
 // Here's a couple more easy Clippy fixes, so you can see its utility.
 //
 // Execute `rustlings hint clippy3` or use the `hint` watch subcommand for a hint.
@@ -11,10 +11,7 @@ fn main() {
         // 移除无意义的 unwrap（None 调用 unwrap 会 panic，Clippy 会警告）
     }
 
-    let my_arr = &[
-        -1, -2, -3,
-        -4, -5, -6
-    ];
+    let my_arr = &[-1, -2, -3, -4, -5, -6];
     println!("My array! Here it is: {:?}", my_arr);
 
     let mut my_empty_vec = vec![1, 2, 3, 4, 5];

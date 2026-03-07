@@ -7,7 +7,6 @@
 // Execute `rustlings hint move_semantics4` or use the `hint` watch subcommand
 // for a hint.
 
-
 fn main() {
     // 移除了原有的 vec0 定义，符合“不在外部创建 Vec”的要求
     let mut vec1 = fill_vec();

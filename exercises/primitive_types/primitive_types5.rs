@@ -5,7 +5,6 @@
 // Execute `rustlings hint primitive_types5` or use the `hint` watch subcommand
 // for a hint.
 
-
 fn main() {
     let cat = ("Furry McFurson", 3.5);
     let (name, age) = cat; // 解构元组，将两个元素分别赋值给 name 和 age

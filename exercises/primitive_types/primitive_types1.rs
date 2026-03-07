@@ -6,7 +6,6 @@
 // Execute `rustlings hint primitive_types1` or use the `hint` watch subcommand
 // for a hint.
 
-
 fn main() {
     // Booleans (`bool`)
 

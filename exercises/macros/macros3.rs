@@ -12,5 +12,5 @@ mod macros {
 // use crate::my_macro;  // 这一行要删掉
 
 fn main() {
-    my_macro!();  // 直接使用即可，无需导入
+    my_macro!(); // 直接使用即可，无需导入
 }

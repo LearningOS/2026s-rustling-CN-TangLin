@@ -49,7 +49,7 @@ impl From<&str> for Person {
 
         // 步骤2：按逗号分割字符串
         let parts: Vec<&str> = s.split(',').collect();
-        
+
         // 步骤3：提取名字（第一个元素），步骤4：名字为空返回默认值
         let name = match parts.get(0) {
             Some(n) if !n.is_empty() => n.to_string(),

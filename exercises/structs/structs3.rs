@@ -7,7 +7,6 @@
 // Execute `rustlings hint structs3` or use the `hint` watch subcommand for a
 // hint.
 
-
 #[derive(Debug)]
 struct Package {
     sender_country: String,

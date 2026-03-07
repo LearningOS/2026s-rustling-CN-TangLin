@@ -8,8 +8,6 @@
 // Execute `rustlings hint threads1` or use the `hint` watch subcommand for a
 // hint.
 
-
-
 use std::thread;
 use std::time::{Duration, Instant};
 

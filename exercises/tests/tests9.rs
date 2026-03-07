@@ -27,8 +27,6 @@
 //
 // You should NOT modify any existing code except for adding two lines of attributes.
 
-
-
 extern "Rust" {
     fn my_demo_function(a: u32) -> u32;
     // 给别名函数添加 link_name 属性，映射到实际函数符号

@@ -4,8 +4,8 @@
 */
 
 use std::fmt::{self, Display, Formatter};
-use std::ptr::NonNull;
 use std::mem;
+use std::ptr::NonNull;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -15,10 +15,7 @@ struct Node<T> {
 
 impl<T> Node<T> {
     fn new(t: T) -> Node<T> {
-        Node {
-            val: t,
-            next: None,
-        }
+        Node { val: t, next: None }
     }
 }
 
@@ -53,7 +50,7 @@ impl<T> LinkedList<T> {
         // 先将节点存入 Vec，再获取 NonNull 指针（避免内存泄漏）
         let node_ptr = NonNull::from(&*node);
         self.nodes.push(node);
-        
+
         match self.end {
             None => self.start = Some(node_ptr),
             Some(end_ptr) => unsafe {
@@ -174,10 +171,10 @@ mod tests {
     fn test_merge_linked_list_1() {
         let mut list_a = LinkedList::<i32>::new();
         let mut list_b = LinkedList::<i32>::new();
-        let vec_a = vec![1,3,5,7];
-        let vec_b = vec![2,4,6,8];
-        let target_vec = vec![1,2,3,4,5,6,7,8];
-        
+        let vec_a = vec![1, 3, 5, 7];
+        let vec_b = vec![2, 4, 6, 8];
+        let target_vec = vec![1, 2, 3, 4, 5, 6, 7, 8];
+
         for &num in &vec_a {
             list_a.add(num);
         }
@@ -187,7 +184,7 @@ mod tests {
         println!("list a [{}], list b [{}]", list_a, list_b);
         let list_c = LinkedList::<i32>::merge(list_a, list_b);
         println!("merged List is [{}]", list_c);
-        
+
         for i in 0..target_vec.len() {
             assert_eq!(target_vec[i], *list_c.get(i as i32).unwrap());
         }
@@ -198,9 +195,9 @@ mod tests {
     fn test_merge_linked_list_2() {
         let mut list_a = LinkedList::<i32>::new();
         let mut list_b = LinkedList::<i32>::new();
-        let vec_a = vec![11,33,44,88,89,90,100];
-        let vec_b = vec![1,22,30,45];
-        let target_vec = vec![1,11,22,30,33,44,45,88,89,90,100];
+        let vec_a = vec![11, 33, 44, 88, 89, 90, 100];
+        let vec_b = vec![1, 22, 30, 45];
+        let target_vec = vec![1, 11, 22, 30, 33, 44, 45, 88, 89, 90, 100];
 
         for &num in &vec_a {
             list_a.add(num);
@@ -211,7 +208,7 @@ mod tests {
         println!("list a [{}], list b [{}]", list_a, list_b);
         let list_c = LinkedList::<i32>::merge(list_a, list_b);
         println!("merged List is [{}]", list_c);
-        
+
         for i in 0..target_vec.len() {
             assert_eq!(target_vec[i], *list_c.get(i as i32).unwrap());
         }

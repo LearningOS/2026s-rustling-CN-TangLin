@@ -1,13 +1,12 @@
 /*
-	bfs
-	This problem requires you to implement a basic BFS algorithm
+    bfs
+    This problem requires you to implement a basic BFS algorithm
 */
-
 
 use std::collections::VecDeque;
 
 struct Graph {
-    adj: Vec<Vec<usize>>, 
+    adj: Vec<Vec<usize>>,
 }
 
 impl Graph {
@@ -18,8 +17,8 @@ impl Graph {
     }
 
     fn add_edge(&mut self, src: usize, dest: usize) {
-        self.adj[src].push(dest); 
-        self.adj[dest].push(src); 
+        self.adj[src].push(dest);
+        self.adj[dest].push(src);
     }
 
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
@@ -44,7 +43,6 @@ impl Graph {
         visit_order
     }
 }
-
 
 #[cfg(test)]
 mod tests {

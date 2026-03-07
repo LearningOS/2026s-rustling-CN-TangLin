@@ -10,7 +10,6 @@
 //
 // Execute `rustlings hint rc1` or use the `hint` watch subcommand for a hint.
 
-
 use std::rc::Rc;
 
 #[derive(Debug)]
@@ -58,17 +57,14 @@ fn main() {
     println!("reference count = {}", Rc::strong_count(&sun)); // 6 references
     jupiter.details();
 
-    // TODO 1: 克隆现有sun的Rc，而非创建新Sun
     let saturn = Planet::Saturn(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 7 references
     saturn.details();
 
-    // TODO 2: 克隆现有sun的Rc，而非创建新Sun
     let uranus = Planet::Uranus(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 8 references
     uranus.details();
 
-    // TODO 3: 克隆现有sun的Rc，而非创建新Sun
     let neptune = Planet::Neptune(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 9 references
     neptune.details();
@@ -90,15 +86,12 @@ fn main() {
     drop(mars);
     println!("reference count = {}", Rc::strong_count(&sun)); // 4 references
 
-    // TODO 4: drop earth，引用计数减到3
     drop(earth);
     println!("reference count = {}", Rc::strong_count(&sun)); // 3 references
 
-    // TODO 5: drop venus，引用计数减到2
     drop(venus);
     println!("reference count = {}", Rc::strong_count(&sun)); // 2 references
 
-    // TODO 6: drop mercury，引用计数减到1
     drop(mercury);
     println!("reference count = {}", Rc::strong_count(&sun)); // 1 reference
 

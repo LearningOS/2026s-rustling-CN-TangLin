@@ -8,10 +8,8 @@
 //
 // This exercise is meant to show you what to expect when passing data to Cow.
 // Fix the unit tests by checking for Cow::Owned(_) and Cow::Borrowed(_) at the
-// TODO markers.
 //
 // Execute `rustlings hint cow1` or use the `hint` watch subcommand for a hint.
-
 
 use std::borrow::Cow;
 
@@ -47,7 +45,6 @@ mod tests {
         let slice = [0, 1, 2];
         let mut input = Cow::from(&slice[..]);
         match abs_all(&mut input) {
-            // TODO: 无 mutation，保持 Borrowed 状态
             Cow::Borrowed(_) => Ok(()),
             _ => Err("Expected borrowed value"),
         }
@@ -61,7 +58,6 @@ mod tests {
         let slice = vec![0, 1, 2];
         let mut input = Cow::from(slice);
         match abs_all(&mut input) {
-            // TODO: 初始就是 Owned，无 mutation 仍保持 Owned
             Cow::Owned(_) => Ok(()),
             _ => Err("Expected owned value"),
         }
@@ -75,7 +71,6 @@ mod tests {
         let slice = vec![-1, 0, 1];
         let mut input = Cow::from(slice);
         match abs_all(&mut input) {
-            // TODO: 初始就是 Owned，mutation 后仍为 Owned
             Cow::Owned(_) => Ok(()),
             _ => Err("Expected owned value"),
         }

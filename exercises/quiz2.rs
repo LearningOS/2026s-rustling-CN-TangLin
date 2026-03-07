@@ -11,11 +11,12 @@ mod my_module {
     pub fn transformer(input: Vec<(String, Command)>) -> Vec<String> {
         // 补全输出类型：Vec<String>
         let mut output: Vec<String> = vec![];
-        for (string, command) in input { // 直接迭代，无需 iter()
+        for (string, command) in input {
+            // 直接迭代，无需 iter()
             // 匹配命令并执行对应的字符串转换
             let result = match command {
                 Command::Uppercase => string.to_uppercase(), // 转大写
-                Command::Trim => string.trim().to_string(),   // 去除首尾空格
+                Command::Trim => string.trim().to_string(),  // 去除首尾空格
                 Command::Append(n) => {
                     // 拼接 n 次 "bar"
                     let mut s = string; // 直接使用，无需克隆（已获取所有权）

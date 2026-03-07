@@ -1,6 +1,6 @@
 /*
-	heap
-	This question requires you to implement a binary heap function
+    heap
+    This question requires you to implement a binary heap function
 */
 
 use std::cmp::Ord;
@@ -69,7 +69,7 @@ where
     fn smallest_child_idx(&self, idx: usize) -> usize {
         let left = self.left_child_idx(idx);
         let right = self.right_child_idx(idx);
-        
+
         if right > self.count {
             left
         } else if (self.comparator)(&self.items[left], &self.items[right]) {

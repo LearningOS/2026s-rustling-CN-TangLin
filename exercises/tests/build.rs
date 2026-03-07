@@ -12,7 +12,7 @@ fn main() {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
         .as_secs();
-    
+
     // ✅ 正确格式：cargo:rustc-env=变量名=值
     // 注入 TEST_FOO 环境变量，值为当前时间戳
     let env_command = format!("rustc-env=TEST_FOO={}", timestamp);

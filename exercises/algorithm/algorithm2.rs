@@ -1,6 +1,6 @@
 /*
-	double linked list reverse
-	This problem requires you to reverse a doubly linked list
+    double linked list reverse
+    This problem requires you to reverse a doubly linked list
 */
 
 use std::fmt::{self, Display, Formatter};
@@ -53,7 +53,7 @@ impl<T> LinkedList<T> {
         let mut node = Box::new(Node::new(obj));
         node.next = None;
         node.prev = self.end;
-        
+
         // 安全获取指针：先存入 Vec 再取引用，避免 raw pointer 泄漏
         let node_ptr = NonNull::from(&*node);
         let node_ptr_opt = Some(node_ptr);
@@ -64,7 +64,7 @@ impl<T> LinkedList<T> {
                 (*end_ptr.as_ptr()).next = node_ptr_opt;
             },
         }
-        
+
         self.nodes.push(node); // 节点所有权交给 Vec，自动释放
         self.end = node_ptr_opt;
         self.length += 1;
@@ -168,15 +168,15 @@ mod tests {
         let mut list = LinkedList::<i32>::new();
         let original_vec = vec![2, 3, 5, 11, 9, 7];
         let reverse_vec = vec![7, 9, 11, 5, 3, 2];
-        
+
         for &num in &original_vec {
             list.add(num);
         }
-        
+
         println!("Original Linked List is [{}]", list);
         list.reverse();
         println!("Reversed Linked List is [{}]", list);
-        
+
         for i in 0..original_vec.len() {
             assert_eq!(reverse_vec[i], *list.get(i as i32).unwrap());
         }
@@ -189,15 +189,15 @@ mod tests {
         let mut list = LinkedList::<i32>::new();
         let original_vec = vec![34, 56, 78, 25, 90, 10, 19, 34, 21, 45];
         let reverse_vec = vec![45, 21, 34, 19, 10, 90, 25, 78, 56, 34];
-        
+
         for &num in &original_vec {
             list.add(num);
         }
-        
+
         println!("Original Linked List is [{}]", list);
         list.reverse();
         println!("Reversed Linked List is [{}]", list);
-        
+
         for i in 0..original_vec.len() {
             assert_eq!(reverse_vec[i], *list.get(i as i32).unwrap());
         }

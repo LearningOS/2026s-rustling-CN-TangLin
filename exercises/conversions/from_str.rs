@@ -41,7 +41,7 @@ impl FromStr for Person {
 
         // 步骤2：按逗号分割字符串
         let parts: Vec<&str> = s.split(',').collect();
-        
+
         // 步骤3：分割后必须正好2个元素，否则返回 BadLen 错误
         if parts.len() != 2 {
             return Err(ParsePersonError::BadLen);
@@ -55,7 +55,9 @@ impl FromStr for Person {
 
         // 步骤5：提取年龄并解析，失败则返回 ParseInt 错误
         let age_str = parts[1].trim();
-        let age = age_str.parse::<usize>().map_err(ParsePersonError::ParseInt)?;
+        let age = age_str
+            .parse::<usize>()
+            .map_err(ParsePersonError::ParseInt)?;
 
         // 所有条件满足，返回成功的 Person
         Ok(Person {

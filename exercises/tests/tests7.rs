@@ -34,7 +34,6 @@
 // Execute `rustlings hint tests7` or use the `hint` watch subcommand for a
 // hint.
 
-
 fn main() {
     // 1. 获取当前系统时间对应的 Unix 时间戳（秒）
     let current_timestamp = std::time::SystemTime::now()

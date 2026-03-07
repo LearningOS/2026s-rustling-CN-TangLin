@@ -7,10 +7,10 @@
 
 enum Message {
     // 定义枚举变体，匹配 process 中要处理的操作类型
-    Quit,                      // 退出操作，无参数
-    Echo(String),              // 回显操作，携带字符串
-    Move(Point),               // 移动操作，携带 Point 结构体
-    ChangeColor(u8, u8, u8),   // 改颜色操作，携带三个 u8 的元组
+    Quit,                    // 退出操作，无参数
+    Echo(String),            // 回显操作，携带字符串
+    Move(Point),             // 移动操作，携带 Point 结构体
+    ChangeColor(u8, u8, u8), // 改颜色操作，携带三个 u8 的元组
 }
 
 struct Point {
@@ -22,7 +22,7 @@ struct State {
     color: (u8, u8, u8),
     position: Point,
     quit: bool,
-    message: String
+    message: String,
 }
 
 impl State {
@@ -34,7 +34,9 @@ impl State {
         self.quit = true;
     }
 
-    fn echo(&mut self, s: String) { self.message = s }
+    fn echo(&mut self, s: String) {
+        self.message = s
+    }
 
     fn move_position(&mut self, p: Point) {
         self.position = p;
