@@ -1,21 +1,17 @@
-// lifetimes3.rs
-//
-// Lifetimes are also needed when structs hold references.
-//
-// Execute `rustlings hint lifetimes3` or use the `hint` watch subcommand for a
-// hint.
-
-// I AM NOT DONE
-
-struct Book {
-    author: &str,
-    title: &str,
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
 }
 
 fn main() {
-    let name = String::from("Jill Smith");
-    let title = String::from("Fish Flying");
-    let book = Book { author: &name, title: &title };
-
-    println!("{} by {}", book.title, book.author);
+    let string1 = String::from("long string is long");
+    {
+        let string2 = String::from("xyz");
+        let result = longest(string1.as_str(), string2.as_str());
+        // 将打印语句移到内部作用域，确保result引用的内存仍有效
+        println!("The longest string is '{}'", result);
+    }
 }

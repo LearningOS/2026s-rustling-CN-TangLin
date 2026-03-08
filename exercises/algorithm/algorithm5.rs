@@ -3,12 +3,11 @@
 	This problem requires you to implement a basic BFS algorithm
 */
 
-//I AM NOT DONE
 use std::collections::VecDeque;
 
-// Define a graph
+// Define a graph (邻接表表示)
 struct Graph {
-    adj: Vec<Vec<usize>>, 
+    adj: Vec<Vec<usize>>, // adj[i] 存储节点i的所有邻接节点
 }
 
 impl Graph {
@@ -19,22 +18,48 @@ impl Graph {
         }
     }
 
-    // Add an edge to the graph
+    // Add an edge to the graph (无向边：双向添加)
     fn add_edge(&mut self, src: usize, dest: usize) {
-        self.adj[src].push(dest); 
-        self.adj[dest].push(src); 
+        self.adj[src].push(dest);
+        self.adj[dest].push(src);
     }
 
     // Perform a breadth-first search on the graph, return the order of visited nodes
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
-        
-		//TODO
-
+        // 1. 初始化访问标记数组：false表示未访问，长度等于节点数
+        let mut visited = vec![false; self.adj.len()];
+        // 2. 初始化队列（BFS核心数据结构），存入起始节点
+        let mut queue = VecDeque::new();
+        // 3. 初始化访问顺序列表
         let mut visit_order = vec![];
+
+        // 边界：起始节点超出范围（测试用例不会触发，仅鲁棒性）
+        if start >= self.adj.len() {
+            return visit_order;
+        }
+
+        // 4. 标记起始节点为已访问，并加入队列
+        visited[start] = true;
+        queue.push_back(start);
+
+        // 5. 核心BFS循环：队列非空时持续处理
+        while let Some(current) = queue.pop_front() {
+            // 将当前节点加入访问顺序
+            visit_order.push(current);
+
+            // 遍历当前节点的所有邻接节点
+            for &neighbor in &self.adj[current] {
+                // 未访问的邻接节点：标记+入队
+                if !visited[neighbor] {
+                    visited[neighbor] = true;
+                    queue.push_back(neighbor);
+                }
+            }
+        }
+
         visit_order
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -84,4 +109,3 @@ mod tests {
         assert_eq!(visited_order, vec![0]);
     }
 }
-

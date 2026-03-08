@@ -1,12 +1,5 @@
-// macros3.rs
-//
-// Make me compile, without taking the macro out of the module!
-//
-// Execute `rustlings hint macros3` or use the `hint` watch subcommand for a
-// hint.
-
-// I AM NOT DONE
-
+// 关键修改：给模块添加 #[macro_use]，导出内部的宏到外部作用域
+#[macro_use]
 mod macros {
     macro_rules! my_macro {
         () => {
@@ -16,5 +9,5 @@ mod macros {
 }
 
 fn main() {
-    my_macro!();
+    my_macro!(); // 现在能找到模块内导出的宏
 }

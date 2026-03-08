@@ -3,11 +3,10 @@
 	This problem requires you to implement a basic DFS traversal
 */
 
-// I AM NOT DONE
 use std::collections::HashSet;
 
 struct Graph {
-    adj: Vec<Vec<usize>>, 
+    adj: Vec<Vec<usize>>, // 邻接表：adj[i] 存储节点i的所有邻接节点
 }
 
 impl Graph {
@@ -17,20 +16,43 @@ impl Graph {
         }
     }
 
+    // 添加无向边：双向更新邻接表
     fn add_edge(&mut self, src: usize, dest: usize) {
         self.adj[src].push(dest);
-        self.adj[dest].push(src); 
+        self.adj[dest].push(src);
     }
 
+    // DFS 辅助函数（递归核心）
+    // v: 当前节点，visited: 已访问节点集合，visit_order: 访问顺序列表
     fn dfs_util(&self, v: usize, visited: &mut HashSet<usize>, visit_order: &mut Vec<usize>) {
-        //TODO
+        // 1. 若当前节点已访问，直接返回（避免重复/环导致的无限递归）
+        if visited.contains(&v) {
+            return;
+        }
+
+        // 2. 标记当前节点为已访问，并加入访问顺序
+        visited.insert(v);
+        visit_order.push(v);
+
+        // 3. 遍历当前节点的所有邻接节点，递归访问未访问的节点
+        for &neighbor in &self.adj[v] {
+            self.dfs_util(neighbor, visited, visit_order);
+        }
     }
 
-    // Perform a depth-first search on the graph, return the order of visited nodes
+    // DFS 入口方法：返回访问顺序列表
     fn dfs(&self, start: usize) -> Vec<usize> {
-        let mut visited = HashSet::new();
-        let mut visit_order = Vec::new(); 
+        let mut visited = HashSet::new(); // 初始化访问标记集合
+        let mut visit_order = Vec::new(); // 初始化访问顺序
+
+        // 边界：起始节点超出图的节点范围，返回空列表
+        if start >= self.adj.len() {
+            return visit_order;
+        }
+
+        // 调用递归辅助函数
         self.dfs_util(start, &mut visited, &mut visit_order);
+
         visit_order
     }
 }
@@ -56,7 +78,7 @@ mod tests {
         graph.add_edge(0, 2);
         graph.add_edge(1, 2);
         graph.add_edge(2, 3);
-        graph.add_edge(3, 3); 
+        graph.add_edge(3, 3); // 自环
 
         let visit_order = graph.dfs(0);
         assert_eq!(visit_order, vec![0, 1, 2, 3]);
@@ -67,12 +89,11 @@ mod tests {
         let mut graph = Graph::new(5);
         graph.add_edge(0, 1);
         graph.add_edge(0, 2);
-        graph.add_edge(3, 4); 
+        graph.add_edge(3, 4); // 非连通分支
 
         let visit_order = graph.dfs(0);
-        assert_eq!(visit_order, vec![0, 1, 2]); 
+        assert_eq!(visit_order, vec![0, 1, 2]);
         let visit_order_disconnected = graph.dfs(3);
-        assert_eq!(visit_order_disconnected, vec![3, 4]); 
+        assert_eq!(visit_order_disconnected, vec![3, 4]);
     }
 }
-

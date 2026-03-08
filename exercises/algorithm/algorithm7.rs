@@ -3,12 +3,12 @@
 	This question requires you to use a stack to achieve a bracket match
 */
 
-// I AM NOT DONE
 #[derive(Debug)]
 struct Stack<T> {
 	size: usize,
 	data: Vec<T>,
 }
+
 impl<T> Stack<T> {
 	fn new() -> Self {
 		Self {
@@ -16,39 +16,53 @@ impl<T> Stack<T> {
 			data: Vec::new(),
 		}
 	}
+
 	fn is_empty(&self) -> bool {
 		0 == self.size
 	}
+
 	fn len(&self) -> usize {
 		self.size
 	}
+
 	fn clear(&mut self) {
 		self.size = 0;
 		self.data.clear();
 	}
+
 	fn push(&mut self, val: T) {
 		self.data.push(val);
 		self.size += 1;
 	}
+
+	// 实现栈的pop方法：弹出栈顶元素，空栈返回None
 	fn pop(&mut self) -> Option<T> {
-		// TODO
-		None
+		if self.is_empty() {
+			None
+		} else {
+			self.size -= 1; // 先更新大小，再弹出元素
+			self.data.pop()
+		}
 	}
+
 	fn peek(&self) -> Option<&T> {
 		if 0 == self.size {
 			return None;
 		}
 		self.data.get(self.size - 1)
 	}
+
 	fn peek_mut(&mut self) -> Option<&mut T> {
 		if 0 == self.size {
 			return None;
 		}
 		self.data.get_mut(self.size - 1)
 	}
+
 	fn into_iter(self) -> IntoIter<T> {
 		IntoIter(self)
 	}
+
 	fn iter(&self) -> Iter<T> {
 		let mut iterator = Iter { 
 			stack: Vec::new() 
@@ -58,6 +72,7 @@ impl<T> Stack<T> {
 		}
 		iterator
 	}
+
 	fn iter_mut(&mut self) -> IterMut<T> {
 		let mut iterator = IterMut { 
 			stack: Vec::new() 
@@ -68,30 +83,36 @@ impl<T> Stack<T> {
 		iterator
 	}
 }
+
 struct IntoIter<T>(Stack<T>);
+
 impl<T: Clone> Iterator for IntoIter<T> {
 	type Item = T;
 	fn next(&mut self) -> Option<Self::Item> {
 		if !self.0.is_empty() {
-			self.0.size -= 1;self.0.data.pop()
-		} 
-		else {
+			self.0.size -= 1;
+			self.0.data.pop()
+		} else {
 			None
 		}
 	}
 }
+
 struct Iter<'a, T: 'a> {
 	stack: Vec<&'a T>,
 }
+
 impl<'a, T> Iterator for Iter<'a, T> {
 	type Item = &'a T;
 	fn next(&mut self) -> Option<Self::Item> {
 		self.stack.pop()
 	}
 }
+
 struct IterMut<'a, T: 'a> {
 	stack: Vec<&'a mut T>,
 }
+
 impl<'a, T> Iterator for IterMut<'a, T> {
 	type Item = &'a mut T;
 	fn next(&mut self) -> Option<Self::Item> {
@@ -99,10 +120,39 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 	}
 }
 
-fn bracket_match(bracket: &str) -> bool
-{
-	//TODO
-	true
+// 括号匹配核心函数
+fn bracket_match(bracket: &str) -> bool {
+	// 1. 初始化字符栈
+	let mut stack = Stack::new();
+
+	// 2. 遍历字符串中的每个字符
+	for c in bracket.chars() {
+		match c {
+			// 3. 左括号：入栈
+			'(' | '{' | '[' => stack.push(c),
+			// 4. 右括号：匹配栈顶左括号
+			')' => {
+				if stack.pop() != Some('(') {
+					return false; // 栈空/不匹配，直接失败
+				}
+			}
+			'}' => {
+				if stack.pop() != Some('{') {
+					return false;
+				}
+			}
+			']' => {
+				if stack.pop() != Some('[') {
+					return false;
+				}
+			}
+			// 5. 非括号字符：忽略
+			_ => continue,
+		}
+	}
+
+	// 6. 遍历结束后，栈必须为空（无未匹配的左括号）
+	stack.is_empty()
 }
 
 #[cfg(test)]
@@ -114,26 +164,31 @@ mod tests {
 		let s = "(2+3){func}[abc]";
 		assert_eq!(bracket_match(s),true);
 	}
+
 	#[test]
 	fn bracket_matching_2(){
 		let s = "(2+3)*(3-1";
 		assert_eq!(bracket_match(s),false);
 	}
+
 	#[test]
 	fn bracket_matching_3(){
 		let s = "{{([])}}";
 		assert_eq!(bracket_match(s),true);
 	}
+
 	#[test]
 	fn bracket_matching_4(){
 		let s = "{{(}[)]}";
 		assert_eq!(bracket_match(s),false);
 	}
+
 	#[test]
 	fn bracket_matching_5(){
 		let s = "[[[]]]]]]]]]";
 		assert_eq!(bracket_match(s),false);
 	}
+
 	#[test]
 	fn bracket_matching_6(){
 		let s = "";
