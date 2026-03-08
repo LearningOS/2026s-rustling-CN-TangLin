@@ -27,9 +27,13 @@ use std::thread;
 
 fn main() {
     let numbers: Vec<_> = (0..100u32).collect();
+    // 核心修复1：用Arc包装numbers，创建线程安全的共享引用（TODO1 位置）
+    let shared_numbers = Arc::new(numbers);
     let mut joinhandles = Vec::new();
 
     for offset in 0..8 {
+        // 核心修复2：克隆Arc（仅复制指针+引用计数，不拷贝Vec数据），赋值给child_numbers（TODO2 位置）
+        let child_numbers = Arc::clone(&shared_numbers);
         joinhandles.push(thread::spawn(move || {
             let sum: u32 = child_numbers.iter().filter(|&&n| n % 8 == offset).sum();
             println!("Sum of offset {} is {}", offset, sum);
