@@ -1,0 +1,11 @@
+name: Rustlings CI
+on: [push, pull_request]
+jobs:
+  verify-exercises:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Verify all exercises
+        run: cargo run --bin rustlings verify
