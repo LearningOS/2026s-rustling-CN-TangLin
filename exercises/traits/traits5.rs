@@ -18,7 +18,7 @@ impl OtherTrait for SomeStruct {}
 impl SomeTrait for OtherStruct {}
 impl OtherTrait for OtherStruct {}
 
-// 唯一修改行：泛型 T 同时约束 SomeTrait + OtherTrait
+// 修正后的函数签名：泛型T同时实现两个trait
 fn some_func<T: SomeTrait + OtherTrait>(item: T) -> bool {
     item.some_function() && item.other_function()
 }

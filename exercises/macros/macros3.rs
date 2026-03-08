@@ -1,6 +1,6 @@
-// macros3.rs
+// 关键修改：给模块添加 #[macro_use]，导出内部的宏到外部作用域
+#[macro_use]
 mod macros {
-    #[macro_export]
     macro_rules! my_macro {
         () => {
             println!("Check out my macro!");
@@ -8,9 +8,6 @@ mod macros {
     }
 }
 
-// 关键：删除手动导入宏的语句，因为 #[macro_export] 已让宏全局可用
-// use crate::my_macro;  // 这一行要删掉
-
 fn main() {
-    my_macro!(); // 直接使用即可，无需导入
+    my_macro!(); // 现在能找到模块内导出的宏
 }

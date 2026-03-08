@@ -24,8 +24,11 @@ use std::num::ParseIntError;
 pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
     let processing_fee = 1;
     let cost_per_item = 5;
+    // 核心修复：用?操作符传播错误
+    // 如果parse成功，解包为i32；如果失败，直接返回ParseIntError
     let qty = item_quantity.parse::<i32>()?;
 
+    // 成功时计算总价，用Ok包裹返回
     Ok(qty * cost_per_item + processing_fee)
 }
 
@@ -35,7 +38,7 @@ mod tests {
 
     #[test]
     fn item_quantity_is_a_valid_number() {
-        assert_eq!(total_cost("34"), Ok(171)); // 34*5 +1 = 171
+        assert_eq!(total_cost("34"), Ok(171));
     }
 
     #[test]

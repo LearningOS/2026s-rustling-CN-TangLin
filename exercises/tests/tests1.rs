@@ -14,7 +14,7 @@
 mod tests {
     #[test]
     fn you_can_assert() {
-        // 给 assert! 传入一个 true 值，让测试通过
+        // 传入布尔值true，让assert!通过，测试成功
         assert!(true);
     }
 }

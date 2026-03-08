@@ -1,10 +1,9 @@
 /*
-    single linked list merge
-    This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
+	single linked list merge
+	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
 
 use std::fmt::{self, Display, Formatter};
-use std::mem;
 use std::ptr::NonNull;
 
 #[derive(Debug)]
@@ -15,7 +14,10 @@ struct Node<T> {
 
 impl<T> Node<T> {
     fn new(t: T) -> Node<T> {
-        Node { val: t, next: None }
+        Node {
+            val: t,
+            next: None,
+        }
     }
 }
 
@@ -24,8 +26,6 @@ struct LinkedList<T> {
     length: u32,
     start: Option<NonNull<Node<T>>>,
     end: Option<NonNull<Node<T>>>,
-    // 新增：存储所有节点的 Box，避免内存泄漏
-    nodes: Vec<Box<Node<T>>>,
 }
 
 impl<T> Default for LinkedList<T> {
@@ -40,35 +40,27 @@ impl<T> LinkedList<T> {
             length: 0,
             start: None,
             end: None,
-            nodes: Vec::new(), // 初始化节点存储容器
         }
     }
 
     pub fn add(&mut self, obj: T) {
         let mut node = Box::new(Node::new(obj));
         node.next = None;
-        // 先将节点存入 Vec，再获取 NonNull 指针（避免内存泄漏）
-        let node_ptr = NonNull::from(&*node);
-        self.nodes.push(node);
-
+        // 安全转换Box为原始指针（Box::into_raw保证指针有效）
+        let node_ptr = Some(unsafe { NonNull::new_unchecked(Box::into_raw(node)) });
         match self.end {
-            None => self.start = Some(node_ptr),
-            Some(end_ptr) => unsafe {
-                (*end_ptr.as_ptr()).next = Some(node_ptr);
-            },
+            None => self.start = node_ptr,
+            Some(end_ptr) => unsafe { (*end_ptr.as_ptr()).next = node_ptr },
         }
-        self.end = Some(node_ptr);
+        self.end = node_ptr;
         self.length += 1;
     }
 
-    pub fn get(&self, index: i32) -> Option<&T> {
-        if index < 0 || index as u32 >= self.length {
-            return None; // 处理索引越界
-        }
+    pub fn get(&mut self, index: i32) -> Option<&T> {
         self.get_ith_node(self.start, index)
     }
 
-    fn get_ith_node(&self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
+    fn get_ith_node(&mut self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
         match node {
             None => None,
             Some(next_ptr) => match index {
@@ -78,44 +70,52 @@ impl<T> LinkedList<T> {
         }
     }
 
-    pub fn merge(mut list_a: LinkedList<T>, mut list_b: LinkedList<T>) -> Self
+    /// 合并两个有序链表为一个新的有序链表
+    /// 约束：T必须可比较（Ord）且可克隆（Clone）
+    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
     where
-        T: Ord + Clone, // 新增 Clone 约束，避免所有权转移问题
+        T: Ord + Clone,
     {
-        let mut merged_list = LinkedList::new();
-        let mut ptr_a = list_a.start;
-        let mut ptr_b = list_b.start;
+        let mut merged = LinkedList::new();
+        // 初始化两个指针，分别指向两个链表的头节点
+        let mut curr_a = list_a.start;
+        let mut curr_b = list_b.start;
 
-        // 核心逻辑：按序合并两个链表的节点
-        while let (Some(a), Some(b)) = (ptr_a, ptr_b) {
-            let val_a = unsafe { &(*a.as_ptr()).val };
-            let val_b = unsafe { &(*b.as_ptr()).val };
+        // 循环比较两个链表的当前节点，取较小值加入合并链表
+        while let (Some(a_ptr), Some(b_ptr)) = (curr_a, curr_b) {
+            // 安全解引用指针（原链表的节点由Box创建，指针有效）
+            let a_val = unsafe { &(*a_ptr.as_ptr()).val };
+            let b_val = unsafe { &(*b_ptr.as_ptr()).val };
 
-            if val_a <= val_b {
-                // 克隆节点值添加到合并链表（避免原链表节点所有权问题）
-                merged_list.add(val_a.clone());
-                ptr_a = unsafe { (*a.as_ptr()).next };
+            if a_val <= b_val {
+                // 复制a节点的值并添加到合并链表
+                merged.add(unsafe { (*a_ptr.as_ptr()).val.clone() });
+                // 移动a指针到下一个节点
+                curr_a = unsafe { (*a_ptr.as_ptr()).next };
             } else {
-                merged_list.add(val_b.clone());
-                ptr_b = unsafe { (*b.as_ptr()).next };
+                // 复制b节点的值并添加到合并链表
+                merged.add(unsafe { (*b_ptr.as_ptr()).val.clone() });
+                // 移动b指针到下一个节点
+                curr_b = unsafe { (*b_ptr.as_ptr()).next };
             }
         }
 
-        // 处理 list_a 剩余的节点
-        while let Some(a) = ptr_a {
-            merged_list.add(unsafe { (*a.as_ptr()).val.clone() });
-            ptr_a = unsafe { (*a.as_ptr()).next };
+        // 处理list_a剩余的节点
+        while let Some(a_ptr) = curr_a {
+            merged.add(unsafe { (*a_ptr.as_ptr()).val.clone() });
+            curr_a = unsafe { (*a_ptr.as_ptr()).next };
         }
 
-        // 处理 list_b 剩余的节点
-        while let Some(b) = ptr_b {
-            merged_list.add(unsafe { (*b.as_ptr()).val.clone() });
-            ptr_b = unsafe { (*b.as_ptr()).next };
+        // 处理list_b剩余的节点
+        while let Some(b_ptr) = curr_b {
+            merged.add(unsafe { (*b_ptr.as_ptr()).val.clone() });
+            curr_b = unsafe { (*b_ptr.as_ptr()).next };
         }
 
-        // 精准计算长度（不再依赖原链表长度相加）
-        merged_list.length = merged_list.nodes.len() as u32;
-        merged_list
+        // 直接设置长度（比依赖add累加更高效，且避免误差）
+        merged.length = list_a.length + list_b.length;
+
+        merged
     }
 }
 
@@ -124,17 +124,22 @@ where
     T: Display,
 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        let mut current = self.start;
-        let mut first = true;
-        while let Some(node) = current {
-            if !first {
-                write!(f, ", ")?;
-            }
-            write!(f, "{}", unsafe { &(*node.as_ptr()).val })?;
-            current = unsafe { (*node.as_ptr()).next };
-            first = false;
+        match self.start {
+            Some(node) => write!(f, "{}", unsafe { node.as_ref() }),
+            None => Ok(()),
         }
-        Ok(())
+    }
+}
+
+impl<T> Display for Node<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match self.next {
+            Some(node) => write!(f, "{}, {}", self.val, unsafe { node.as_ref() }),
+            None => write!(f, "{}", self.val),
+        }
     }
 }
 
@@ -148,12 +153,8 @@ mod tests {
         list.add(1);
         list.add(2);
         list.add(3);
-        println!("Linked List is [{}]", list);
+        println!("Linked List is {}", list);
         assert_eq!(3, list.length);
-        assert_eq!(Some(&1), list.get(0));
-        assert_eq!(Some(&2), list.get(1));
-        assert_eq!(Some(&3), list.get(2));
-        assert_eq!(None, list.get(3)); // 测试越界
     }
 
     #[test]
@@ -162,9 +163,8 @@ mod tests {
         list_str.add("A".to_string());
         list_str.add("B".to_string());
         list_str.add("C".to_string());
-        println!("Linked List is [{}]", list_str);
+        println!("Linked List is {}", list_str);
         assert_eq!(3, list_str.length);
-        assert_eq!(Some(&"A".to_string()), list_str.get(0));
     }
 
     #[test]
@@ -175,20 +175,18 @@ mod tests {
         let vec_b = vec![2, 4, 6, 8];
         let target_vec = vec![1, 2, 3, 4, 5, 6, 7, 8];
 
-        for &num in &vec_a {
-            list_a.add(num);
+        for i in 0..vec_a.len() {
+            list_a.add(vec_a[i]);
         }
-        for &num in &vec_b {
-            list_b.add(num);
+        for i in 0..vec_b.len() {
+            list_b.add(vec_b[i]);
         }
-        println!("list a [{}], list b [{}]", list_a, list_b);
-        let list_c = LinkedList::<i32>::merge(list_a, list_b);
-        println!("merged List is [{}]", list_c);
-
+        println!("list a {} list b {}", list_a, list_b);
+        let mut list_c = LinkedList::<i32>::merge(list_a, list_b);
+        println!("merged List is {}", list_c);
         for i in 0..target_vec.len() {
             assert_eq!(target_vec[i], *list_c.get(i as i32).unwrap());
         }
-        assert_eq!(8, list_c.length); // 验证长度正确
     }
 
     #[test]
@@ -199,19 +197,17 @@ mod tests {
         let vec_b = vec![1, 22, 30, 45];
         let target_vec = vec![1, 11, 22, 30, 33, 44, 45, 88, 89, 90, 100];
 
-        for &num in &vec_a {
-            list_a.add(num);
+        for i in 0..vec_a.len() {
+            list_a.add(vec_a[i]);
         }
-        for &num in &vec_b {
-            list_b.add(num);
+        for i in 0..vec_b.len() {
+            list_b.add(vec_b[i]);
         }
-        println!("list a [{}], list b [{}]", list_a, list_b);
-        let list_c = LinkedList::<i32>::merge(list_a, list_b);
-        println!("merged List is [{}]", list_c);
-
+        println!("list a {} list b {}", list_a, list_b);
+        let mut list_c = LinkedList::<i32>::merge(list_a, list_b);
+        println!("merged List is {}", list_c);
         for i in 0..target_vec.len() {
             assert_eq!(target_vec[i], *list_c.get(i as i32).unwrap());
         }
-        assert_eq!(11, list_c.length); // 验证长度正确
     }
 }

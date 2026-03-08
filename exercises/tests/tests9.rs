@@ -29,13 +29,13 @@
 
 extern "Rust" {
     fn my_demo_function(a: u32) -> u32;
-    // 给别名函数添加 link_name 属性，映射到实际函数符号
+    // 新增属性：将别名映射到实际的my_demo_function符号
     #[link_name = "my_demo_function"]
     fn my_demo_function_alias(a: u32) -> u32;
 }
 
 mod Foo {
-    // 添加 no_mangle 属性，取消符号混淆，让外部能找到这个函数
+    // 新增属性：禁止Rust混淆函数名，让链接器能找到my_demo_function
     #[no_mangle]
     // No `extern` equals `extern "Rust"`.
     fn my_demo_function(a: u32) -> u32 {

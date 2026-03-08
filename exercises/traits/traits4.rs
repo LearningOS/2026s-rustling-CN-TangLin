@@ -11,7 +11,7 @@ struct OtherSoftware {}
 impl Licensed for SomeSoftware {}
 impl Licensed for OtherSoftware {}
 
-// 唯一修改行：泛型 T/U 约束为 Licensed trait
+// 修正后的函数签名：两个泛型参数，都绑定Licensed trait
 fn compare_license_types<T: Licensed, U: Licensed>(software: T, software_two: U) -> bool {
     software.licensing_info() == software_two.licensing_info()
 }

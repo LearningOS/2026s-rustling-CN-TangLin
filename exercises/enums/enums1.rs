@@ -4,7 +4,7 @@
 
 #[derive(Debug)]
 enum Message {
-    // 定义枚举的所有变体，匹配 main 中使用的类型
+    // 定义枚举变体（单元变体，无关联数据），与main中调用的名称完全一致
     Quit,
     Echo,
     Move,

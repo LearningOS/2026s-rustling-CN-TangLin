@@ -1,77 +1,95 @@
 /*
-    graph
-    This problem requires you to implement a basic graph functio
+	graph
+	This problem requires you to implement a basic graph function
 */
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
+
 #[derive(Debug, Clone)]
 pub struct NodeNotInGraph;
+
 impl fmt::Display for NodeNotInGraph {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "accessing a node that is not in the graph")
     }
 }
+
 pub struct UndirectedGraph {
     adjacency_table: HashMap<String, Vec<(String, i32)>>,
 }
+
 impl Graph for UndirectedGraph {
     fn new() -> UndirectedGraph {
         UndirectedGraph {
             adjacency_table: HashMap::new(),
         }
     }
+
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>> {
         &mut self.adjacency_table
     }
+
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>> {
         &self.adjacency_table
     }
+
+    /// 添加无向边：双向更新邻接表
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         let (from, to, weight) = edge;
+        // 1. 确保两个节点都在图中（不存在则添加）
         self.add_node(from);
         self.add_node(to);
+
+        // 2. 双向添加边到邻接表
+        let from_str = from.to_string();
+        let to_str = to.to_string();
+        // 从from到to的边
         self.adjacency_table_mutable()
-            .get_mut(from)
-            .unwrap()
-            .push((to.to_string(), weight));
+            .get_mut(&from_str)
+            .unwrap() // 已add_node，必然存在
+            .push((to_str.clone(), weight));
+        // 从to到from的边（无向图双向）
         self.adjacency_table_mutable()
-            .get_mut(to)
-            .unwrap()
-            .push((from.to_string(), weight));
+            .get_mut(&to_str)
+            .unwrap() // 已add_node，必然存在
+            .push((from_str, weight));
     }
 }
+
 pub trait Graph {
     fn new() -> Self;
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>>;
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
+
+    /// 添加节点到图中
+    /// 返回值：true=节点不存在，已添加；false=节点已存在，未添加
     fn add_node(&mut self, node: &str) -> bool {
+        let node_str = node.to_string();
+        // 检查节点是否已存在
         if self.contains(node) {
             return false;
         }
+        // 不存在则添加空邻接列表
         self.adjacency_table_mutable()
-            .insert(node.to_string(), Vec::new());
+            .insert(node_str, Vec::new());
         true
     }
-    fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        let (from, to, weight) = edge;
-        self.add_node(from);
-        self.add_node(to);
-        self.adjacency_table_mutable()
-            .entry(from.to_string())
-            .or_default()
-            .push((to.to_string(), weight));
-        self.adjacency_table_mutable()
-            .entry(to.to_string())
-            .or_default()
-            .push((from.to_string(), weight));
-    }
+
+    /// 添加边（由具体图类型实现，如无向图/有向图）
+    fn add_edge(&mut self, edge: (&str, &str, i32));
+
+    /// 检查节点是否在图中
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()
     }
+
+    /// 获取所有节点的集合
     fn nodes(&self) -> HashSet<&String> {
         self.adjacency_table().keys().collect()
     }
+
+    /// 获取所有边的列表（(起点, 终点, 权重)）
     fn edges(&self) -> Vec<(&String, &String, i32)> {
         let mut edges = Vec::new();
         for (from_node, from_node_neighbours) in self.adjacency_table() {
@@ -82,10 +100,12 @@ pub trait Graph {
         edges
     }
 }
+
 #[cfg(test)]
 mod test_undirected_graph {
     use super::Graph;
     use super::UndirectedGraph;
+
     #[test]
     fn test_add_edge() {
         let mut graph = UndirectedGraph::new();

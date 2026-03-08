@@ -35,11 +35,13 @@ mod tests {
     #[test]
     fn your_order() {
         let order_template = create_order_template();
+        // 使用 Rust 结构体更新语法，基于模板创建新实例（只修改需要变更的字段）
         let your_order = Order {
-            name: String::from("Hacker in Rust"),
-            count: 1,
-            ..order_template
+            name: String::from("Hacker in Rust"),  // 覆盖模板的 name
+            count: 1,                              // 覆盖模板的 count
+            ..order_template                       // 其余字段复用模板的值（更新语法核心）
         };
+
         assert_eq!(your_order.name, "Hacker in Rust");
         assert_eq!(your_order.year, order_template.year);
         assert_eq!(your_order.made_by_phone, order_template.made_by_phone);

@@ -1,5 +1,5 @@
 pub trait Licensed {
-    // 为 trait 方法添加默认实现，返回固定的授权信息
+    // 为 trait 方法添加默认实现，返回指定的授权信息
     fn licensing_info(&self) -> String {
         String::from("Some information")
     }
@@ -13,9 +13,9 @@ struct OtherSoftware {
     version_number: String,
 }
 
-// 无需修改这两行，因为 trait 已有默认实现
-impl Licensed for SomeSoftware {}
-impl Licensed for OtherSoftware {}
+// 空实现即可，会自动使用 trait 的默认方法
+impl Licensed for SomeSoftware {} 
+impl Licensed for OtherSoftware {} 
 
 #[cfg(test)]
 mod tests {

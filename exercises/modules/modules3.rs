@@ -8,6 +8,7 @@
 // Execute `rustlings hint modules3` or use the `hint` watch subcommand for a
 // hint.
 
+// 一行导入std::time中的两个项：SystemTime 和 UNIX_EPOCH
 use std::time::{SystemTime, UNIX_EPOCH};
 
 fn main() {

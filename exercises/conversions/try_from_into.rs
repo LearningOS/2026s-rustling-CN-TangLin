@@ -27,55 +27,64 @@ enum IntoColorError {
     IntConversion,
 }
 
-// 辅助函数：校验 i16 是否在 u8 范围内（0..=255），并转换
-fn validate_and_convert(val: i16) -> Result<u8, IntoColorError> {
-    if val >= 0 && val <= u8::MAX as i16 {
-        Ok(val as u8)
+// 辅助函数：检查i16是否在u8范围内（0..=255），转换失败返回IntConversion
+fn convert_i16_to_u8(n: i16) -> Result<u8, IntoColorError> {
+    if (0..=255).contains(&n) {
+        Ok(n as u8)
     } else {
         Err(IntoColorError::IntConversion)
     }
 }
 
-// Tuple implementation
+// Tuple implementation (三元组实现)
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
+    
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
-        let (red, green, blue) = tuple;
-        Ok(Color {
-            red: validate_and_convert(red)?,
-            green: validate_and_convert(green)?,
-            blue: validate_and_convert(blue)?,
-        })
+        // 解构三元组为红、绿、蓝三个分量
+        let (r, g, b) = tuple;
+        // 逐个转换并检查范围，? 操作符传递错误
+        let red = convert_i16_to_u8(r)?;
+        let green = convert_i16_to_u8(g)?;
+        let blue = convert_i16_to_u8(b)?;
+        
+        Ok(Color { red, green, blue })
     }
 }
 
-// Array implementation
+// Array implementation (固定长度数组实现)
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
+    
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
-        let [red, green, blue] = arr;
-        Ok(Color {
-            red: validate_and_convert(red)?,
-            green: validate_and_convert(green)?,
-            blue: validate_and_convert(blue)?,
-        })
+        // 解构数组为三个分量（数组长度固定为3，无需检查长度）
+        let [r, g, b] = arr;
+        let red = convert_i16_to_u8(r)?;
+        let green = convert_i16_to_u8(g)?;
+        let blue = convert_i16_to_u8(b)?;
+        
+        Ok(Color { red, green, blue })
     }
 }
 
-// Slice implementation
+// Slice implementation (切片实现)
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
+    
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
-        // 步骤1：校验切片长度必须为3，否则返回 BadLen
+        // 第一步：检查切片长度是否为3，否则返回BadLen错误
         if slice.len() != 3 {
             return Err(IntoColorError::BadLen);
         }
-
-        // 步骤2：提取并校验每个颜色值
-        let red = validate_and_convert(slice[0])?;
-        let green = validate_and_convert(slice[1])?;
-        let blue = validate_and_convert(slice[2])?;
-
+        
+        // 第二步：提取三个分量并转换
+        let r = slice[0];
+        let g = slice[1];
+        let b = slice[2];
+        let red = convert_i16_to_u8(r)?;
+        let green = convert_i16_to_u8(g)?;
+        let blue = convert_i16_to_u8(b)?;
+        
         Ok(Color { red, green, blue })
     }
 }
@@ -83,19 +92,19 @@ impl TryFrom<&[i16]> for Color {
 fn main() {
     // Use the `try_from` function
     let c1 = Color::try_from((183, 65, 14));
-    println!("{:?}", c1);
+    println!("{:?}", c1); // 输出：Ok(Color { red: 183, green: 65, blue: 14 })
 
     // Since TryFrom is implemented for Color, we should be able to use TryInto
     let c2: Result<Color, _> = [183, 65, 14].try_into();
-    println!("{:?}", c2);
+    println!("{:?}", c2); // 输出：Ok(Color { red: 183, green: 65, blue: 14 })
 
     let v = vec![183, 65, 14];
     // With slice we should use `try_from` function
     let c3 = Color::try_from(&v[..]);
-    println!("{:?}", c3);
+    println!("{:?}", c3); // 输出：Ok(Color { red: 183, green: 65, blue: 14 })
     // or take slice within round brackets and use TryInto
     let c4: Result<Color, _> = (&v[..]).try_into();
-    println!("{:?}", c4);
+    println!("{:?}", c4); // 输出：Ok(Color { red: 183, green: 65, blue: 14 })
 }
 
 #[cfg(test)]

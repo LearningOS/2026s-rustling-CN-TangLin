@@ -12,13 +12,13 @@
 
 fn average(values: &[f64]) -> f64 {
     let total = values.iter().sum::<f64>();
-    // 将 usize 类型的长度转换为 f64 类型，保证除法运算类型匹配
+    // 关键修改：将 usize 类型的长度转换为 f64 类型
     total / values.len() as f64
 }
 
 fn main() {
     let values = [3.5, 0.3, 13.0, 11.7];
-    println!("{}", average(&values));
+    println!("{}", average(&values)); // 输出：7.125
 }
 
 #[cfg(test)]

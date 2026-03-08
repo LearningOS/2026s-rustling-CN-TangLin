@@ -2,6 +2,7 @@ use std::error;
 use std::fmt;
 use std::num::ParseIntError;
 
+// 关键修改：将???替换为error::Error
 fn main() -> Result<(), Box<dyn error::Error>> {
     let pretend_user_input = "42";
     let x: i64 = pretend_user_input.parse()?;
@@ -9,6 +10,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
     Ok(())
 }
 
+// 以下代码无需修改
 #[derive(PartialEq, Debug)]
 struct PositiveNonzeroInteger(u64);
 

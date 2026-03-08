@@ -11,5 +11,6 @@ fn main() {
 }
 
 fn current_favorite_color() -> String {
-    "blue".to_string() // 将&str转换为String
+    // 把字符串字面量(&str)转换成拥有所有权的String类型
+    "blue".to_string()
 }

@@ -1,13 +1,3 @@
-// threads1.rs
-//
-// This program spawns multiple threads that each run for at least 250ms, and
-// each thread returns how much time they took to complete. The program should
-// wait until all the spawned threads have finished and should collect their
-// return values into a vector.
-//
-// Execute `rustlings hint threads1` or use the `hint` watch subcommand for a
-// hint.
-
 use std::thread;
 use std::time::{Duration, Instant};
 
@@ -24,8 +14,7 @@ fn main() {
 
     let mut results: Vec<u128> = vec![];
     for handle in handles {
-        // 关键：调用 join() 等待线程结束，并获取返回值
-        // unwrap() 处理 join 可能的错误（如线程恐慌）
+        // TODO 解决：调用join()等待线程完成，unwrap获取返回值，push到results
         let result = handle.join().unwrap();
         results.push(result);
     }

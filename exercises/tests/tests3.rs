@@ -1,12 +1,3 @@
-// tests3.rs
-//
-// This test isn't testing our function -- make it do that in such a way that
-// the test passes. Then write a second test that tests whether we get the
-// result we expect to get when we call `is_even(5)`.
-//
-// Execute `rustlings hint tests3` or use the `hint` watch subcommand for a
-// hint.
-
 pub fn is_even(num: i32) -> bool {
     num % 2 == 0
 }
@@ -17,15 +8,16 @@ mod tests {
 
     #[test]
     fn is_true_when_even() {
-        // 测试偶数场景：调用 is_even(4) 应该返回 true，断言通过
+        // 传入偶数（如4），验证is_even返回true
         assert!(is_even(4));
     }
 
     #[test]
     fn is_false_when_odd() {
-        // 按题目要求测试 is_even(5)：奇数应该返回 false
-        // 用 assert! 断言结果为 false，也可以用 assert_eq! 更直观
+        // 测试题目指定的5，验证is_even返回false
+        // 方式1：用!取反，assert!接收true（推荐，简洁）
         assert!(!is_even(5));
-        // 等价写法（推荐，可读性更高）：assert_eq!(is_even(5), false);
+        // 方式2：用assert_eq!更直观，等价写法：
+        // assert_eq!(is_even(5), false);
     }
 }

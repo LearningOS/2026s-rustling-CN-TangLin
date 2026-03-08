@@ -1,15 +1,3 @@
-// rc1.rs
-//
-// In this exercise, we want to express the concept of multiple owners via the
-// Rc<T> type. This is a model of our solar system - there is a Sun type and
-// multiple Planets. The Planets take ownership of the sun, indicating that they
-// revolve around the sun.
-//
-// Make this code compile by using the proper Rc primitives to express that the
-// sun has multiple owners.
-//
-// Execute `rustlings hint rc1` or use the `hint` watch subcommand for a hint.
-
 use std::rc::Rc;
 
 #[derive(Debug)]
@@ -57,14 +45,17 @@ fn main() {
     println!("reference count = {}", Rc::strong_count(&sun)); // 6 references
     jupiter.details();
 
+    // TODO 1: 克隆原有sun的Rc，而非创建新Sun
     let saturn = Planet::Saturn(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 7 references
     saturn.details();
 
+    // TODO 2: 克隆原有sun的Rc
     let uranus = Planet::Uranus(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 8 references
     uranus.details();
 
+    // TODO 3: 克隆原有sun的Rc
     let neptune = Planet::Neptune(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 9 references
     neptune.details();
@@ -86,12 +77,15 @@ fn main() {
     drop(mars);
     println!("reference count = {}", Rc::strong_count(&sun)); // 4 references
 
+    // TODO 4: drop earth 减少引用计数到3
     drop(earth);
     println!("reference count = {}", Rc::strong_count(&sun)); // 3 references
 
+    // TODO 5: drop venus 减少引用计数到2
     drop(venus);
     println!("reference count = {}", Rc::strong_count(&sun)); // 2 references
 
+    // TODO 6: drop mercury 减少引用计数到1
     drop(mercury);
     println!("reference count = {}", Rc::strong_count(&sun)); // 1 reference
 

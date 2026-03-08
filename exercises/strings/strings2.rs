@@ -7,8 +7,8 @@
 
 fn main() {
     let word = String::from("green"); // Try not changing this line :)
+    // 关键修复：给String加&，转换成&str类型（String可自动Deref为&str）
     if is_a_color_word(&word) {
-        // 将String转为&str传递
         println!("That is a color word I know!");
     } else {
         println!("That is not a color word I know.");

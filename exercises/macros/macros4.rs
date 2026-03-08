@@ -1,16 +1,11 @@
-// macros4.rs
-//
-// Execute `rustlings hint macros4` or use the `hint` watch subcommand for a
-// hint.
-
 #[rustfmt::skip]
 macro_rules! my_macro {
     () => {
         println!("Check out my macro!");
-    };
+    }; // 关键修改：添加分号分隔分支
     ($val:expr) => {
         println!("Look at this other macro: {}", $val);
-    };
+    }; // 关键修改：最后一个分支也建议加结束分号
 }
 
 fn main() {

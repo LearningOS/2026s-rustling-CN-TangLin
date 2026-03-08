@@ -4,13 +4,12 @@ trait AppendBar {
 
 // 为 Vec<String> 实现 AppendBar trait
 impl AppendBar for Vec<String> {
-    fn append_bar(self) -> Self {
-        // 先将 self 转为可变（因为要追加元素）
-        let mut vec = self;
+    // 将 self 标记为 mut，因为要修改向量内容
+    fn append_bar(mut self) -> Self {
         // 向向量末尾追加 "Bar" 字符串
-        vec.push(String::from("Bar"));
-        // 返回修改后的向量
-        vec
+        self.push(String::from("Bar"));
+        // 返回修改后的向量（所有权转移）
+        self
     }
 }
 

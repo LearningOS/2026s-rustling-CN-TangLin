@@ -35,7 +35,10 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
     ];
 
     for fruit in fruit_kinds {
-        basket.entry(fruit).or_insert(1);
+        // 核心逻辑：仅插入篮子中不存在的水果，数量设为1（满足「至少1个」且总数超11）
+        if !basket.contains_key(&fruit) {
+            basket.insert(fruit, 1);
+        }
     }
 }
 
@@ -43,6 +46,7 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
 mod tests {
     use super::*;
 
+    // Don't modify this function!
     fn get_fruit_basket() -> HashMap<Fruit, u32> {
         let mut basket = HashMap::<Fruit, u32>::new();
         basket.insert(Fruit::Apple, 4);
@@ -76,7 +80,7 @@ mod tests {
         let count = basket.values().sum::<u32>();
         assert!(count > 11);
     }
-
+    
     #[test]
     fn all_fruit_types_in_basket() {
         let mut basket = get_fruit_basket();

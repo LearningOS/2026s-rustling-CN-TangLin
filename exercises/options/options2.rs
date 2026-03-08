@@ -10,6 +10,7 @@ mod tests {
         let target = "rustlings";
         let optional_target = Some(target);
 
+        // 修复：使用if let匹配Some变体，解包出word
         if let Some(word) = optional_target {
             assert_eq!(word, target);
         }
@@ -26,10 +27,9 @@ mod tests {
 
         let mut cursor = range;
 
-        // adds another layer of Option<T>. You can stack `Option<T>`s into
-        // while let and if let.
+        // 修复：使用while let匹配嵌套的Option（pop返回Option<Option<i8>>）
         while let Some(Some(integer)) = optional_integers.pop() {
-            assert_eq!(integer, cursor as i8);
+            assert_eq!(integer, cursor);
             cursor -= 1;
         }
 

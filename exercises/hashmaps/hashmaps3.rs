@@ -16,12 +16,14 @@
 
 use std::collections::HashMap;
 
+// A structure to store the goal details of a team.
 struct Team {
     goals_scored: u8,
     goals_conceded: u8,
 }
 
 fn build_scores_table(results: String) -> HashMap<String, Team> {
+    // The name of the team is the key and its associated struct is the value.
     let mut scores: HashMap<String, Team> = HashMap::new();
 
     for r in results.lines() {
@@ -31,29 +33,21 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         let team_2_name = v[1].to_string();
         let team_2_score: u8 = v[3].parse().unwrap();
 
-        // 处理第一支队伍
-        scores
-            .entry(team_1_name.clone())
-            .and_modify(|t| {
-                t.goals_scored += team_1_score;
-                t.goals_conceded += team_2_score;
-            })
-            .or_insert(Team {
-                goals_scored: team_1_score,
-                goals_conceded: team_2_score,
-            });
+        // 处理球队1：更新进球和失球
+        let team1_entry = scores.entry(team_1_name).or_insert(Team {
+            goals_scored: 0,
+            goals_conceded: 0,
+        });
+        team1_entry.goals_scored += team_1_score;
+        team1_entry.goals_conceded += team_2_score;
 
-        // 处理第二支队伍
-        scores
-            .entry(team_2_name.clone())
-            .and_modify(|t| {
-                t.goals_scored += team_2_score;
-                t.goals_conceded += team_1_score;
-            })
-            .or_insert(Team {
-                goals_scored: team_2_score,
-                goals_conceded: team_1_score,
-            });
+        // 处理球队2：更新进球和失球
+        let team2_entry = scores.entry(team_2_name).or_insert(Team {
+            goals_scored: 0,
+            goals_conceded: 0,
+        });
+        team2_entry.goals_scored += team_2_score;
+        team2_entry.goals_conceded += team_1_score;
     }
     scores
 }

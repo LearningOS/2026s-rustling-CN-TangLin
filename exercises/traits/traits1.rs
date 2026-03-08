@@ -3,10 +3,15 @@ trait AppendBar {
 }
 
 impl AppendBar for String {
-    // 实现 append_bar 方法：拼接 "Bar" 并返回新字符串
+    // 实现 append_bar 方法：追加 "Bar" 并返回自身
     fn append_bar(self) -> Self {
-        // self 是 String 类型，拼接 "Bar" 后返回新的 String
-        self + "Bar"
+        // 方式1：通过 push_str 修改字符串（更直观）
+        let mut s = self; // 取得所有权并转为可变
+        s.push_str("Bar"); // 追加 "Bar" 到字符串末尾
+        s // 返回修改后的字符串
+
+        // 方式2（更简洁）：利用 String 的加法运算符
+        // self + "Bar"
     }
 }
 

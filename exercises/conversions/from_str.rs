@@ -33,33 +33,32 @@ enum ParsePersonError {
 
 impl FromStr for Person {
     type Err = ParsePersonError;
+    
     fn from_str(s: &str) -> Result<Person, Self::Err> {
         // 步骤1：空字符串返回 Empty 错误
         if s.is_empty() {
             return Err(ParsePersonError::Empty);
         }
 
-        // 步骤2：按逗号分割字符串
+        // 步骤2：按逗号分割字符串，收集到 Vec 中
         let parts: Vec<&str> = s.split(',').collect();
 
-        // 步骤3：分割后必须正好2个元素，否则返回 BadLen 错误
+        // 步骤3：分割后必须恰好 2 个字段，否则返回 BadLen 错误
         if parts.len() != 2 {
             return Err(ParsePersonError::BadLen);
         }
 
-        // 步骤4：提取名字，为空则返回 NoName 错误
-        let name = parts[0].trim(); // 兼容可能的空白字符
+        // 步骤4：提取名字并去除前后空白，空名字返回 NoName 错误
+        let name = parts[0].trim();
         if name.is_empty() {
             return Err(ParsePersonError::NoName);
         }
 
-        // 步骤5：提取年龄并解析，失败则返回 ParseInt 错误
+        // 步骤5：提取年龄字符串并解析为 usize，失败则包装为 ParseInt 错误
         let age_str = parts[1].trim();
-        let age = age_str
-            .parse::<usize>()
-            .map_err(ParsePersonError::ParseInt)?;
+        let age = age_str.parse::<usize>().map_err(ParsePersonError::ParseInt)?;
 
-        // 所有条件满足，返回成功的 Person
+        // 所有步骤成功，返回 Person 实例
         Ok(Person {
             name: name.to_string(),
             age,
@@ -69,7 +68,7 @@ impl FromStr for Person {
 
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();
-    println!("{:?}", p);
+    println!("{:?}", p); // 输出：Person { name: "Mark", age: 20 }
 }
 
 #[cfg(test)]

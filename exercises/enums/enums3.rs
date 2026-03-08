@@ -5,12 +5,12 @@
 // Execute `rustlings hint enums3` or use the `hint` watch subcommand for a
 // hint.
 
+// 定义Message枚举变体，匹配测试用例中使用的类型
 enum Message {
-    // 定义枚举变体，匹配 process 中要处理的操作类型
-    Quit,                    // 退出操作，无参数
-    Echo(String),            // 回显操作，携带字符串
-    Move(Point),             // 移动操作，携带 Point 结构体
-    ChangeColor(u8, u8, u8), // 改颜色操作，携带三个 u8 的元组
+    Quit,                          // 无关联数据：退出
+    Echo(String),                  // 携带字符串：回声
+    Move(Point),                   // 携带Point结构体：移动位置
+    ChangeColor(u8, u8, u8),       // 携带三个u8：RGB颜色值
 }
 
 struct Point {
@@ -22,7 +22,7 @@ struct State {
     color: (u8, u8, u8),
     position: Point,
     quit: bool,
-    message: String,
+    message: String
 }
 
 impl State {
@@ -34,21 +34,19 @@ impl State {
         self.quit = true;
     }
 
-    fn echo(&mut self, s: String) {
-        self.message = s
-    }
+    fn echo(&mut self, s: String) { self.message = s; }
 
     fn move_position(&mut self, p: Point) {
         self.position = p;
     }
 
     fn process(&mut self, message: Message) {
-        // 匹配 Message 变体，调用对应方法处理
+        // 用match表达式匹配不同的Message变体，调用对应方法
         match message {
-            Message::Quit => self.quit(),
-            Message::Echo(s) => self.echo(s),
-            Message::Move(p) => self.move_position(p),
-            Message::ChangeColor(r, g, b) => self.change_color((r, g, b)),
+            Message::ChangeColor(r, g, b) => self.change_color((r, g, b)), // 解包RGB值，转成元组传入
+            Message::Echo(s) => self.echo(s),                             // 解包字符串，传入echo方法
+            Message::Move(p) => self.move_position(p),                     // 解包Point，传入move_position方法
+            Message::Quit => self.quit(),                                 // 无关联数据，直接调用quit方法
         }
     }
 }

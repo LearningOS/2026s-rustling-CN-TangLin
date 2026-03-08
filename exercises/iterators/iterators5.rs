@@ -1,16 +1,3 @@
-// iterators5.rs
-//
-// Let's define a simple model to track Rustlings exercise progress. Progress
-// will be modelled using a hash map. The name of the exercise is the key and
-// the progress is the value. Two counting functions were created to count the
-// number of exercises with a given progress. Recreate this counting
-// functionality using iterators. Try not to use imperative loops (for, while).
-// Only the two iterator methods (count_iterator and count_collection_iterator)
-// need to be modified.
-//
-// Execute `rustlings hint iterators5` or use the `hint` watch subcommand for a
-// hint.
-
 use std::collections::HashMap;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -30,10 +17,12 @@ fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
     count
 }
 
+// 改造后的单 HashMap 计数函数
 fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
-    // map is a hashmap with String keys and Progress values.
-    // map = { "variables1": Complete, "from_str": None, ... }
-    map.values().filter(|&&v| v == value).count()
+    // 1. 取出所有值的迭代器 → 2. 过滤出等于目标值的元素 → 3. 统计数量
+    map.values()
+        .filter(|&&val| val == value) // &&val 解引用：values() 返回 &Progress，filter 接收 &&Progress
+        .count()
 }
 
 fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
@@ -48,14 +37,13 @@ fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progres
     count
 }
 
+// 改造后的 HashMap 切片计数函数
 fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
-    // collection is a slice of hashmaps.
-    // collection = [{ "variables1": Complete, "from_str": None, ... },
-    //     { "variables2": Complete, ... }, ... ]
+    // 1. 迭代切片中的每个 HashMap → 2. 展平所有 HashMap 的值（替代嵌套循环）→ 3. 过滤 → 4. 统计
     collection
         .iter()
-        .flat_map(|map| map.values())
-        .filter(|&&v| v == value)
+        .flat_map(|map| map.values()) // flat_map 展平嵌套的迭代器（把多个 values 迭代器合并成一个）
+        .filter(|&&val| val == value)
         .count()
 }
 

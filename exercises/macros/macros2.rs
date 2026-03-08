@@ -1,8 +1,4 @@
-// macros2.rs
-//
-// Execute `rustlings hint macros2` or use the `hint` watch subcommand for a
-// hint.
-
+// 关键修改：将宏定义移到调用它的代码（main函数）之前
 macro_rules! my_macro {
     () => {
         println!("Check out my macro!");

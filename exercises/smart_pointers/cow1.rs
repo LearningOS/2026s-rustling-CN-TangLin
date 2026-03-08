@@ -1,16 +1,3 @@
-// cow1.rs
-//
-// This exercise explores the Cow, or Clone-On-Write type. Cow is a
-// clone-on-write smart pointer. It can enclose and provide immutable access to
-// borrowed data, and clone the data lazily when mutation or ownership is
-// required. The type is designed to work with general borrowed data via the
-// Borrow trait.
-//
-// This exercise is meant to show you what to expect when passing data to Cow.
-// Fix the unit tests by checking for Cow::Owned(_) and Cow::Borrowed(_) at the
-//
-// Execute `rustlings hint cow1` or use the `hint` watch subcommand for a hint.
-
 use std::borrow::Cow;
 
 fn abs_all<'a, 'b>(input: &'a mut Cow<'b, [i32]>) -> &'a mut Cow<'b, [i32]> {
@@ -45,6 +32,7 @@ mod tests {
         let slice = [0, 1, 2];
         let mut input = Cow::from(&slice[..]);
         match abs_all(&mut input) {
+            // TODO：借用数据且无修改 → 保持 Borrowed
             Cow::Borrowed(_) => Ok(()),
             _ => Err("Expected borrowed value"),
         }
@@ -58,6 +46,7 @@ mod tests {
         let slice = vec![0, 1, 2];
         let mut input = Cow::from(slice);
         match abs_all(&mut input) {
+            // TODO：自有数据且无修改 → 保持 Owned
             Cow::Owned(_) => Ok(()),
             _ => Err("Expected owned value"),
         }
@@ -71,6 +60,7 @@ mod tests {
         let slice = vec![-1, 0, 1];
         let mut input = Cow::from(slice);
         match abs_all(&mut input) {
+            // TODO：自有数据且有修改 → 仍为 Owned（无需克隆）
             Cow::Owned(_) => Ok(()),
             _ => Err("Expected owned value"),
         }

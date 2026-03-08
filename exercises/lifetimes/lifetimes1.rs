@@ -8,6 +8,7 @@
 // Execute `rustlings hint lifetimes1` or use the `hint` watch subcommand for a
 // hint.
 
+// 添加生命周期注解：'a 是生命周期参数，标注x和y的生命周期，返回值复用该生命周期
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     if x.len() > y.len() {
         x

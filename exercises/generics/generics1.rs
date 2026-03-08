@@ -7,6 +7,7 @@
 // hint.
 
 fn main() {
+    // 关键修复：将<?>替换为<&str>，指定Vec的元素类型为字符串切片
     let mut shopping_list: Vec<&str> = Vec::new();
     shopping_list.push("milk");
 }

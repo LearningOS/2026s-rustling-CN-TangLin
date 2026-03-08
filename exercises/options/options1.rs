@@ -10,12 +10,16 @@ fn maybe_icecream(time_of_day: u16) -> Option<u16> {
     // We use the 24-hour system here, so 10PM is a value of 22 and 12AM is a
     // value of 0 The Option output should gracefully handle cases where
     // time_of_day > 23.
+    // 补全函数逻辑：按时间规则返回Option<u16>
     if time_of_day > 23 {
-        None // 超出24小时范围，返回None
+        // 无效时间（>23点）：返回None
+        None
     } else if time_of_day < 22 {
-        Some(5) // 22点前（10PM前），返回5
+        // 22点前（10PM前）：返回Some(5)
+        Some(5)
     } else {
-        Some(0) // 22点及以后（10PM及以后），返回0
+        // 22/23点（10PM及以后）：返回Some(0)
+        Some(0)
     }
 }
 
@@ -34,8 +38,8 @@ mod tests {
 
     #[test]
     fn raw_value() {
-        // Option?
-        let icecreams = maybe_icecream(12).unwrap(); // 从Option中提取值
-        assert_eq!(icecreams, 5);
+        // 修复：解包Option的值（unwrap()），获取内部的u16值
+        let icecreams = maybe_icecream(12);
+        assert_eq!(icecreams.unwrap(), 5);
     }
 }

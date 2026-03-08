@@ -8,7 +8,10 @@
 // hint.
 
 mod delicious_snacks {
-    // 修复：添加 pub 关键字公开导出别名，让外部可以访问
+    // 修复use语句：
+    // 1. 添加pub：让别名对外可见（main能访问）
+    // 2. as 指定别名：PEAR → fruit，CUCUMBER → veggie
+    // 3. 补全分号：Rust语句必须以分号结尾
     pub use self::fruits::PEAR as fruit;
     pub use self::veggies::CUCUMBER as veggie;
 

@@ -1,5 +1,6 @@
 use std::num::ParseIntError;
 
+// 自定义错误类型：包含两种子错误
 #[derive(PartialEq, Debug)]
 enum ParsePosNonzeroError {
     Creation(CreationError),
@@ -10,17 +11,20 @@ impl ParsePosNonzeroError {
     fn from_creation(err: CreationError) -> ParsePosNonzeroError {
         ParsePosNonzeroError::Creation(err)
     }
-
+    // TODO 实现：添加ParseIntError到自定义错误的转换函数
     fn from_parseint(err: ParseIntError) -> ParsePosNonzeroError {
         ParsePosNonzeroError::ParseInt(err)
     }
 }
 
 fn parse_pos_nonzero(s: &str) -> Result<PositiveNonzeroInteger, ParsePosNonzeroError> {
+    // 修复1：替换unwrap，用?+map_err处理解析错误
     let x: i64 = s.parse().map_err(ParsePosNonzeroError::from_parseint)?;
+    // 修复2：创建错误已通过map_err转换，无需修改
     PositiveNonzeroInteger::new(x).map_err(ParsePosNonzeroError::from_creation)
 }
 
+// 以下代码无需修改
 #[derive(PartialEq, Debug)]
 struct PositiveNonzeroInteger(u64);
 

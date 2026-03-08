@@ -1,9 +1,11 @@
 use std::num::ParseIntError;
 
+// 1. 修改main的返回类型为 Result<(), ParseIntError>
 fn main() -> Result<(), ParseIntError> {
     let mut tokens = 100;
     let pretend_user_input = "8";
 
+    // 2. 现在?可以正常使用了
     let cost = total_cost(pretend_user_input)?;
 
     if cost > tokens {
@@ -13,6 +15,7 @@ fn main() -> Result<(), ParseIntError> {
         println!("You now have {} tokens.", tokens);
     }
 
+    // 3. 显式返回Ok(())表示执行成功
     Ok(())
 }
 

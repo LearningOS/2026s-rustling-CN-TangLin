@@ -11,10 +11,10 @@
 
 pub fn generate_nametag_text(name: String) -> Result<String, String> {
     if name.is_empty() {
-        // 返回错误信息，说明空名字不被允许
+        // 空字符串时返回Err，携带错误说明（匹配测试用例）
         Err("`name` was empty; it must be nonempty.".into())
     } else {
-        // 返回成功结果，包含生成的标签文本
+        // 非空时返回Ok，携带格式化的字符串
         Ok(format!("Hi! My name is {}", name))
     }
 }
